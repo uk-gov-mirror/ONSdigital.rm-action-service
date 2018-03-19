@@ -2,7 +2,7 @@
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>actionsvc</artifactId>
-  <version>10.49.13</version>
+  <version>10.49.14-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>CTP : ActionService</name>
@@ -24,7 +24,7 @@
     <connection>scm:git:https://github.com/ONSdigital/rm-action-service</connection>
     <developerConnection>scm:git:https://github.com/ONSdigital/rm-action-service</developerConnection>
     <url>https://github.com/ONSdigital/rm-action-service</url>
-    <tag>actionsvc-10.49.13</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <dependencies>
