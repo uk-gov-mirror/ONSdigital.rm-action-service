@@ -186,74 +186,13 @@ public class ActionService {
 
   @Transactional
   public void createScheduledActions(ActionPlan actionPlan, ActionPlanJob actionPlanJob) {
-    // List<ActionCase> cases = actionCaseRepo.findByActionPlanFK(actionPlan.getActionPlanPK());
-    // List<ActionRule> rules = actionRuleRepo.findByActionPlanFK(actionPlan.getActionPlanPK());
-
+   
     log.debug("createScheduledActions for plan " + actionPlan.getActionPlanPK());
-    int result = actionCaseRepo.createActionsForPlan(6);
-    log.debug("createActionsForPlan returned " + result);
-    // For each case/rule pair create an action
-    // cases.forEach(caze -> createActionsForCase(caze, rules));
+    int result = actionCaseRepo.createActionsForPlan(actionPlan.getActionPlanPK());
+    
     updatePlanAndJob(actionPlan, actionPlanJob);
   }
-  /*
-    private void createActionsForCase(ActionCase actionCase, List<ActionRule> actionRules) {
-      if (isActionPlanLive(actionCase)) {
-        actionRules.forEach(rule -> createActionForCaseAndRule(actionCase, rule));
-      }
-    }
-
-    private boolean isActionPlanLive(ActionCase actionCase) {
-      final Timestamp currentTime = nowUTC();
-      return actionCase.getActionPlanStartDate().before(currentTime)
-          && actionCase.getActionPlanEndDate().after(currentTime);
-    }
-
-    private void createActionForCaseAndRule(ActionCase actionCase, ActionRule actionRule) {
-      if (hasRuleTriggered(actionRule)) {
-        createAction(actionCase, actionRule);
-      }
-    }
-
-    private boolean hasRuleTriggered(ActionRule rule) {
-      final Timestamp currentTime = nowUTC();
-      final Timestamp dayBefore =
-          Timestamp.valueOf(
-              LocalDateTime.ofInstant(
-                  currentTime.toInstant().minus(1, ChronoUnit.DAYS), ZoneOffset.UTC));
-      final Timestamp triggerDateTime =
-          Timestamp.valueOf(
-              LocalDateTime.ofInstant(rule.getTriggerDateTime().toInstant(), ZoneOffset.UTC));
-      return triggerDateTime.before(currentTime) && triggerDateTime.after(dayBefore);
-    }
-
-    private void createAction(ActionCase actionCase, ActionRule actionRule) {
-
-      // Only create action if it doesn't already exist
-      if (actionRepo.existsByCaseIdAndActionRuleFK(
-          actionCase.getId(), actionRule.getActionRulePK())) {
-        return;
-      }
-
-      log.with("case_id", actionCase.getId().toString())
-          .with("action_rule_id", actionRule.getId().toString())
-          .info("Creating action");
-      Action newAction = new Action();
-      newAction.setId(UUID.randomUUID());
-      newAction.setCreatedBy(SYSTEM);
-      newAction.setManuallyCreated(false);
-      newAction.setState(ActionState.SUBMITTED);
-      newAction.setCreatedDateTime(nowUTC());
-      newAction.setCaseFK(actionCase.getCasePK());
-      newAction.setCaseId(actionCase.getId());
-      newAction.setActionPlanFK(actionRule.getActionPlanFK());
-      newAction.setActionRuleFK(actionRule.getActionRulePK());
-      newAction.setPriority(actionRule.getPriority());
-      newAction.setActionType(actionTypeRepo.findByActionTypePK(actionRule.getActionTypeFK()));
-
-      actionRepo.saveAndFlush(newAction);
-    }
-  */
+ 
   private void updatePlanAndJob(ActionPlan actionPlan, ActionPlanJob actionPlanJob) {
     final Timestamp currentTime = nowUTC();
     actionPlanJob.complete(currentTime);
